@@ -60,8 +60,11 @@
       (write data :stream stream :readably t :pretty t))))
 
 (defun parse-archive-path (archive-path-string)
-  "Parse an archive path string into (<archive-path> <internal-path>).
-Splits at .zip/ boundary, e.g. \"external/foo.zip/bar.dll\" -> \"external/foo.zip\", \"bar.dll\"."
+  "Parse ARCHIVE-PATH-STRING, returning archive and internal paths.
+
+<paths>         ::= (values <archive-path> <internal-path>)
+<archive-path>  ::= string
+<internal-path> ::= string"
   (let ((zip-pos (search ".zip/" archive-path-string)))
     (unless zip-pos
       (error "Invalid archive path (no .zip/): ~A" archive-path-string))
@@ -70,7 +73,7 @@ Splits at .zip/ boundary, e.g. \"external/foo.zip/bar.dll\" -> \"external/foo.zi
               (subseq archive-path-string (1+ split-pos))))))
 
 (defun needs-extraction-p (archive-path)
-  "Check if ARCHIVE-PATH needs to be extracted based on modification time."
+  "Return T if ARCHIVE-PATH needs to be extracted based on modification time."
   (let ((metadata (gethash archive-path *archive-metadata*)))
     (if metadata
         (let ((cached-timestamp (getf metadata :timestamp)))
@@ -83,10 +86,11 @@ Splits at .zip/ boundary, e.g. \"external/foo.zip/bar.dll\" -> \"external/foo.zi
         t)))
 
 (defun extract-archive-file (archive-path internal-path destination-type source-system)
-  "Extract INTERNAL-PATH from ARCHIVE-PATH and copy to appropriate cache location.
+  "Extract INTERNAL-PATH from ARCHIVE-PATH, copy to designated cache location, and return it.
 
-DESTINATION-TYPE should be :BIN or :INCLUDE.
-SOURCE-SYSTEM is the ASDF system name."
+<designated-cache-location> ::= pathname
+<destination-type>          ::= :BIN | :INCLUDE
+<source-system>             ::= symbol | string"
   (let* ((archive-stem    (fs:pathname-stem (file-namestring archive-path)))
          (dest-subdir-path (ecase destination-type
                              (:bin +binaries-directory-path+)
@@ -111,8 +115,8 @@ SOURCE-SYSTEM is the ASDF system name."
 (defun register-foreign-dynamic-library (pathname system)
   "Register foreign dynamic library file from archive.
 
-PATHNAME is a path like \"external/archive.zip/lib.dll\".
-SYSTEM is the ASDF system containing the archive."
+<pathname> ::= string
+<system>   ::= symbol | string"
   (multiple-value-bind (archive-name internal-path)
       (parse-archive-path pathname)
     (let* ((archive-full-path (merge-pathnames archive-name
@@ -124,10 +128,10 @@ SYSTEM is the ASDF system containing the archive."
                :test #'uiop:pathname-equal))))
 
 (defun register-foreign-cxx-header (pathname system)
-  "Register foreign C/C++ header file from archive.
+  "Return the destination pathname after registering foreign C/C++ header file from archive.
 
-PATHNAME is a path like \"external/archive.zip/header.h\".
-SYSTEM is the ASDF system containing the archive."
+<pathname> ::= string
+<system>   ::= symbol | string"
   (multiple-value-bind (archive-name internal-path)
       (parse-archive-path pathname)
     (let* ((archive-full-path (merge-pathnames archive-name
