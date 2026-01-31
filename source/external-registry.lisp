@@ -9,7 +9,7 @@
 (in-package #:ck-fli/external-registry)
 
 (defvar *external-registry* (make-hash-table))
-(defvar *archive-metadata* (make-hash-table :test 'equal))
+(defvar *archive-metadata* (make-hash-table :test 'equalp))
 
 (defparameter +cache-directory-name+    "ck-fli")
 (defparameter +external-directory-name+ "external")
