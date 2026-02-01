@@ -1,7 +1,7 @@
 ;;;; Copyright (C) 2025 DAEDSIDOG.  All rights reserved.
 
 (defsystem #:ck-fli/external-registry
-  :depends-on (#:ck-clle #:ck-fs #:cffi)
+  :depends-on (#:ck-clle #:ck-fs #:ck-procvisor #:cffi)
   :components ((:module "source"
                 :components ((:file "external-registry")))))
 
@@ -35,6 +35,31 @@
   (funcall (find-symbol "REGISTER-FOREIGN-CXX-HEADER" "CK-FLI/EXTERNAL-REGISTRY")
            (asdf:component-name component)
            (asdf:component-system component)))
+
+;;; TCC (Tiny C Compiler) external subsystem for CFFI groveling
+
+(defsystem #:ck-fli/external/tcc
+  :if-feature (:and :win32 :x86-64)
+  :depends-on (#:ck-fli/external-registry #:ck-procvisor #:cffi-toolchain))
+
+(defmethod asdf:perform ((op asdf:compile-op) (c (eql (asdf:find-system :ck-fli/external/tcc))))
+  nil)
+
+(defmethod asdf:perform ((op asdf:load-op) (c (eql (asdf:find-system :ck-fli/external/tcc))))
+  (let* ((extraction-dir (funcall (find-symbol "REGISTER-FOREIGN-TOOLCHAIN"
+                                               "CK-FLI/EXTERNAL-REGISTRY")
+                                  "external/tcc-0.9.27-win64-bin.zip"
+                                  c))
+         (tcc-dir (merge-pathnames #p"tcc/" extraction-dir))
+         (tcc-exe (namestring (merge-pathnames "tcc.exe" tcc-dir))))
+    (when (probe-file tcc-exe)
+      (macrolet ((tv (name)
+                   `(symbol-value (find-symbol ,name "CFFI-TOOLCHAIN"))))
+        (setf (tv "*CC*")           tcc-exe
+              (tv "*CC-FLAGS*")     (list "-m64")
+              (tv "*LD*")           tcc-exe
+              (tv "*LD-EXE-FLAGS*") (list "-m64")
+              (tv "*LD-DLL-FLAGS*") (list "-shared" "-m64"))))))
 
 ;;; libffi external subsystem
 

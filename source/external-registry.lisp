@@ -4,7 +4,8 @@
   (:use #:cl #:ck-clle)
   (:local-nicknames (#:fs #:ck-fs))
   (:export #:register-foreign-dynamic-library
-           #:register-foreign-cxx-header))
+           #:register-foreign-cxx-header
+           #:register-foreign-toolchain))
 
 (in-package #:ck-fli/external-registry)
 
@@ -139,5 +140,41 @@
            (destination (extract-archive-file archive-full-path internal-path :include system)))
       (setf (gethash pathname *external-registry*) :cxx-header)
       destination)))
+
+(defun extract-archive-preserving-structure (archive-path)
+  "Extract entire ARCHIVE-PATH preserving directory structure, returning the extraction directory."
+  (let* ((archive-stem (fs:pathname-stem (file-namestring archive-path)))
+         (extraction-dir (merge-pathnames (make-pathname :directory `(:relative ,archive-stem))
+                                          +external-base-directory+)))
+    (when (or (not (probe-file extraction-dir))
+              (needs-extraction-p archive-path))
+      (ensure-directories-exist extraction-dir)
+      (let ((process #+win32
+                     (ck-procvisor:make-process
+                      (list "tar" "-xf" (namestring archive-path)
+                            "-C" (namestring extraction-dir)))
+                     #-win32
+                     (ck-procvisor:make-process
+                      (list "unzip" "-q" "-o" (namestring archive-path)
+                            "-d" (namestring extraction-dir)))))
+        (ck-procvisor:join-process process)
+        (unless (zerop (ck-procvisor:process-exit-code process))
+          (error "Failed to extract archive: ~A" archive-path)))
+      (setf (gethash (namestring archive-path) *archive-metadata*)
+            (list :timestamp (fs:file-age archive-path)
+                  :extraction-dir (namestring extraction-dir)))
+      (save-archive-metadata))
+    extraction-dir))
+
+(defun register-foreign-toolchain (archive-name system)
+  "Extract and register a foreign toolchain archive, returning the extraction directory.
+
+<archive-name> ::= string
+<system>       ::= symbol | string"
+  (let* ((archive-full-path (merge-pathnames archive-name
+                                             (asdf:system-source-directory system)))
+         (extraction-dir (extract-archive-preserving-structure archive-full-path)))
+    (setf (gethash archive-name *external-registry*) extraction-dir)
+    extraction-dir))
 
 (load-archive-metadata)
