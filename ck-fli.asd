@@ -1,7 +1,7 @@
 ;;;; Copyright (C) 2025 DAEDSIDOG.  All rights reserved.
 
 (defsystem #:ck-fli/external-registry
-  :depends-on (#:ck-clle #:ck-fs #:ck-procvisor #:cffi)
+  :depends-on (#:ck-clle #:ck-fs #:cffi)
   :components ((:module "source"
                 :components ((:file "external-registry")))))
 
@@ -40,7 +40,7 @@
 
 (defsystem #:ck-fli/external/tcc
   :if-feature (:and :win32 :x86-64)
-  :depends-on (#:ck-fli/external-registry #:ck-procvisor #:cffi-toolchain))
+  :depends-on (#:ck-fli/external-registry #:cffi-toolchain))
 
 (defmethod asdf:perform ((op asdf:compile-op) (c (eql (asdf:find-system :ck-fli/external/tcc))))
   nil)

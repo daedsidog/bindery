@@ -149,16 +149,14 @@
     (when (or (not (probe-file extraction-dir))
               (needs-extraction-p archive-path))
       (ensure-directories-exist extraction-dir)
-      (let ((process #+win32
-                     (ck-procvisor:make-process
-                      (list "tar" "-xf" (namestring archive-path)
-                            "-C" (namestring extraction-dir)))
-                     #-win32
-                     (ck-procvisor:make-process
-                      (list "unzip" "-q" "-o" (namestring archive-path)
-                            "-d" (namestring extraction-dir)))))
-        (ck-procvisor:join-process process)
-        (unless (zerop (ck-procvisor:process-exit-code process))
+      (multiple-value-bind (output error-output exit-code)
+          (uiop:run-program #+win32 (list "tar" "-xf" (namestring archive-path)
+                                          "-C" (namestring extraction-dir))
+                            #-win32 (list "unzip" "-q" "-o" (namestring archive-path)
+                                          "-d" (namestring extraction-dir))
+                            :ignore-error-status t)
+        (declare (ignore output error-output))
+        (unless (zerop exit-code)
           (error "Failed to extract archive: ~A" archive-path)))
       (setf (gethash (namestring archive-path) *archive-metadata*)
             (list :timestamp (fs:file-age archive-path)
