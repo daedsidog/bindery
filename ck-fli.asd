@@ -96,4 +96,4 @@
 (defsystem #:ck-fli
   :depends-on (#:ck-fli/external-registry #:ck-fli/external/libffi #:cffi-grovel)
   :components ((:module "source"
-                :components ((:file "fli")))))
+                :components ((:file "package")))))
