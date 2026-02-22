@@ -75,7 +75,7 @@
 
 (defun needs-extraction-p (archive-path)
   "Return T if ARCHIVE-PATH needs to be extracted based on modification time."
-  (let ((metadata (gethash archive-path *archive-metadata*)))
+  (let ((metadata (gethash (namestring archive-path) *archive-metadata*)))
     (if metadata
         (let ((cached-timestamp (getf metadata :timestamp)))
           (handler-case
