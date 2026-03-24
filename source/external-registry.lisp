@@ -1,7 +1,7 @@
 ;;;; Copyright (C) 2024 DAEDSIDOG.  All rights reserved.
 
 (defpackage #:ck-fli/external-registry
-  (:use #:cl #:ck-clle)
+  (:use #:cl #:clean)
   (:local-nicknames (#:fs #:ck-fs))
   (:export #:register-foreign-dynamic-library
            #:register-foreign-cxx-header

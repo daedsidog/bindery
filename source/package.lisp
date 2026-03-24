@@ -1,7 +1,7 @@
 ;;;; Copyright (C) 2025 DAEDSIDOG.  All rights reserved.
 
 (uiop:define-package #:ck-fli
-  (:use #:cl #:ck-clle)
+  (:use #:cl #:clean)
   (:reexport #:ck-fli/external-registry))
 
 (in-package #:ck-fli)

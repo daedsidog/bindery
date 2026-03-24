@@ -1,7 +1,7 @@
 ;;;; Copyright (C) 2025 DAEDSIDOG.  All rights reserved.
 
 (defsystem #:ck-fli/external-registry
-  :depends-on (#:ck-clle #:ck-fs #:cffi)
+  :depends-on (#:clean #:ck-fs #:cffi)
   :components ((:module "source"
                 :components ((:file "external-registry")))))
 
