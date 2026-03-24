@@ -2,7 +2,7 @@
 
 (defpackage #:ck-fli/external-registry
   (:use #:cl #:clean)
-  (:local-nicknames (#:fs #:ck-fs))
+  (:local-nicknames (#:fs #:pathway))
   (:export #:register-foreign-dynamic-library
            #:register-foreign-cxx-header
            #:register-foreign-toolchain))

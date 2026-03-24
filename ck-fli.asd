@@ -1,7 +1,7 @@
 ;;;; Copyright (C) 2025 DAEDSIDOG.  All rights reserved.
 
 (defsystem #:ck-fli/external-registry
-  :depends-on (#:clean #:ck-fs #:cffi)
+  :depends-on (#:clean #:pathway #:cffi)
   :components ((:module "source"
                 :components ((:file "external-registry")))))
 
@@ -75,7 +75,7 @@
 ;; and ffitarget.h when generating FFI bindings.
 (defmethod asdf:perform :before ((op asdf:load-op)
                                  (c (eql (asdf:find-system :ck-fli/external/libffi))))
-  (let* ((cache-base (funcall (find-symbol "USER-CACHE-DIRECTORY" "CK-FS")
+  (let* ((cache-base (funcall (find-symbol "USER-CACHE-DIRECTORY" "PATHWAY")
                               (make-pathname :directory '(:relative "ck-fli" "external"))))
          (libffi-include (merge-pathnames
                           #p"libffi-3.5.2-x86-64bit-msvc-binaries/include/"
