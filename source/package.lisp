@@ -1,10 +1,10 @@
 ;;;; Copyright (C) 2025 DAEDSIDOG.  All rights reserved.
 
-(uiop:define-package #:ck-fli
+(uiop:define-package #:cfli
   (:use #:cl #:clean)
-  (:reexport #:ck-fli/external-registry))
+  (:reexport #:cfli/external-registry))
 
-(in-package #:ck-fli)
+(in-package #:cfli)
 
 (defclass asdf-user::cxx-grovel-file (cffi-grovel:grovel-file) ())
 

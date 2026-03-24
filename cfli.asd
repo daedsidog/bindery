@@ -1,6 +1,6 @@
 ;;;; Copyright (C) 2025 DAEDSIDOG.  All rights reserved.
 
-(defsystem #:ck-fli/external-registry
+(defsystem #:cfli/external-registry
   :depends-on (#:clean #:pathway #:cffi)
   :components ((:module "source"
                 :components ((:file "external-registry")))))
@@ -19,7 +19,7 @@
   nil)
 
 (defmethod asdf:perform ((op asdf:load-op) (component foreign-dynamic-library))
-  (funcall (find-symbol "REGISTER-FOREIGN-DYNAMIC-LIBRARY" "CK-FLI/EXTERNAL-REGISTRY")
+  (funcall (find-symbol "REGISTER-FOREIGN-DYNAMIC-LIBRARY" "CFLI/EXTERNAL-REGISTRY")
            (asdf:component-name component)
            (asdf:component-system component)))
 
@@ -32,22 +32,22 @@
   nil)
 
 (defmethod asdf:perform ((op asdf:load-op) (component foreign-cxx-header))
-  (funcall (find-symbol "REGISTER-FOREIGN-CXX-HEADER" "CK-FLI/EXTERNAL-REGISTRY")
+  (funcall (find-symbol "REGISTER-FOREIGN-CXX-HEADER" "CFLI/EXTERNAL-REGISTRY")
            (asdf:component-name component)
            (asdf:component-system component)))
 
 ;;; TCC (Tiny C Compiler) external subsystem for CFFI groveling
 
-(defsystem #:ck-fli/external/tcc
+(defsystem #:cfli/external/tcc
   :if-feature (:and :win32 :x86-64)
-  :depends-on (#:ck-fli/external-registry #:cffi-toolchain))
+  :depends-on (#:cfli/external-registry #:cffi-toolchain))
 
-(defmethod asdf:perform ((op asdf:compile-op) (c (eql (asdf:find-system :ck-fli/external/tcc))))
+(defmethod asdf:perform ((op asdf:compile-op) (c (eql (asdf:find-system :cfli/external/tcc))))
   nil)
 
-(defmethod asdf:perform ((op asdf:load-op) (c (eql (asdf:find-system :ck-fli/external/tcc))))
+(defmethod asdf:perform ((op asdf:load-op) (c (eql (asdf:find-system :cfli/external/tcc))))
   (let* ((extraction-dir (funcall (find-symbol "REGISTER-FOREIGN-TOOLCHAIN"
-                                               "CK-FLI/EXTERNAL-REGISTRY")
+                                               "CFLI/EXTERNAL-REGISTRY")
                                   "external/tcc-0.9.27-win64-bin.zip"
                                   c))
          (tcc-dir (merge-pathnames #p"tcc/" extraction-dir))
@@ -63,9 +63,9 @@
 
 ;;; libffi external subsystem
 
-(defsystem #:ck-fli/external/libffi
+(defsystem #:cfli/external/libffi
   :if-feature (:and :win32 :x86-64)
-  :depends-on (#:ck-fli/external-registry #:cffi-grovel)
+  :depends-on (#:cfli/external-registry #:cffi-grovel)
   :components
   ((:foreign-dynamic-library "external/libffi-3.5.2-x86-64bit-msvc-binaries.zip/libffi-8.dll")
    (:foreign-cxx-header "external/libffi-3.5.2-x86-64bit-msvc-binaries.zip/ffi.h")
@@ -74,9 +74,9 @@
 ;; Add the extracted libffi headers to the C compiler's include path so CFFI-GROVEL can find ffi.h
 ;; and ffitarget.h when generating FFI bindings.
 (defmethod asdf:perform :before ((op asdf:load-op)
-                                 (c (eql (asdf:find-system :ck-fli/external/libffi))))
+                                 (c (eql (asdf:find-system :cfli/external/libffi))))
   (let* ((cache-base (funcall (find-symbol "USER-CACHE-DIRECTORY" "PATHWAY")
-                              (make-pathname :directory '(:relative "ck-fli" "external"))))
+                              (make-pathname :directory '(:relative "cfli" "external"))))
          (libffi-include (merge-pathnames
                           #p"libffi-3.5.2-x86-64bit-msvc-binaries/include/"
                           cache-base))
@@ -93,7 +93,7 @@
                         (symbol-value ld-flags)
                         :test #'string=)))))
 
-(defsystem #:ck-fli
-  :depends-on (#:ck-fli/external-registry #:ck-fli/external/libffi #:cffi-grovel)
+(defsystem #:cfli
+  :depends-on (#:cfli/external-registry #:cfli/external/libffi #:cffi-grovel)
   :components ((:module "source"
                 :components ((:file "package")))))

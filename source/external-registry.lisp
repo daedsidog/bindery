@@ -1,18 +1,18 @@
 ;;;; Copyright (C) 2024 DAEDSIDOG.  All rights reserved.
 
-(defpackage #:ck-fli/external-registry
+(defpackage #:cfli/external-registry
   (:use #:cl #:clean)
   (:local-nicknames (#:fs #:pathway))
   (:export #:register-foreign-dynamic-library
            #:register-foreign-cxx-header
            #:register-foreign-toolchain))
 
-(in-package #:ck-fli/external-registry)
+(in-package #:cfli/external-registry)
 
 (defvar *external-registry* (make-hash-table))
 (defvar *archive-metadata* (make-hash-table :test 'equalp))
 
-(defparameter +cache-directory-name+    "ck-fli")
+(defparameter +cache-directory-name+    "cfli")
 (defparameter +external-directory-name+ "external")
 (defparameter +binaries-directory-name+ "bin")
 (defparameter +include-directory-name+  "include")
