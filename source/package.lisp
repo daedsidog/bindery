@@ -1,7 +1,7 @@
 ;;;; Copyright (C) 2025 DAEDSIDOG.  All rights reserved.
 
 (uiop:define-package #:cfli
-  (:use #:cl #:clean)
+  (:use #:clean)
   (:reexport #:cfli/external-registry))
 
 (in-package #:cfli)
