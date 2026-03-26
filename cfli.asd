@@ -75,7 +75,7 @@
 ;; and ffitarget.h when generating FFI bindings.
 (defmethod asdf:perform :before ((op asdf:load-op)
                                  (c (eql (asdf:find-system :cfli/external/libffi))))
-  (let* ((cache-base (funcall (find-symbol "USER-CACHE-DIRECTORY" "PATHWAY")
+  (let* ((cache-base (funcall (find-symbol "DEFAULT-CACHE-DIRECTORY" "PATHWAY")
                               (make-pathname :directory '(:relative "cfli" "external"))))
          (libffi-include (merge-pathnames
                           #p"libffi-3.5.2-x86-64bit-msvc-binaries/include/"

@@ -21,7 +21,7 @@
   (make-pathname :directory `(:relative ,+external-directory-name+)))
 
 (defparameter +external-base-directory+
-  (fs:user-cache-directory (make-pathname :directory
+  (fs:default-cache-directory (make-pathname :directory
                                           `(:relative ,+cache-directory-name+
                                                       ,+external-directory-name+))))
 
@@ -104,7 +104,7 @@
     (ensure-directories-exist cache-dir)
     (when (or (not (probe-file destination))
               (needs-extraction-p archive-path))
-      (fs:extract-files-from-archive archive-path (list (cons internal-path destination)))
+      (fs:extract-from-archive archive-path (list (cons internal-path destination)))
       (let ((metadata (gethash (namestring archive-path) *archive-metadata*)))
         (setf (gethash (namestring archive-path) *archive-metadata*)
               (list :timestamp (fs:file-age archive-path)
