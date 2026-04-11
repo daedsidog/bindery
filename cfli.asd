@@ -1,4 +1,8 @@
 (defsystem "cfli"
+  :description "Common foreign language interface."
+  :author "Jan Jouleodov"
+  :license "MIT"
+  :if-feature (:and :win32 :x86-64)
   :defsystem-depends-on ("pathway/asdf")
   :depends-on ("clean" "pathway" "cffi")
   :serial t
