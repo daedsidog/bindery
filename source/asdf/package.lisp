@@ -1,8 +1,8 @@
-(defpackage #:cfli/asdf
+(defpackage #:bindery/asdf
   (:use #:clean)
   (:local-nicknames (#:pw #:pathway)))
 
-(in-package #:cfli/asdf)
+(in-package #:bindery/asdf)
 
 (let* ((ws (pw:default-workspace-pathname))
        (tcc-exe (merge-pathnames "tcc/tcc.exe" ws))

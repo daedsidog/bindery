@@ -1,5 +1,5 @@
-(defsystem "cfli"
-  :description "Common foreign language interface."
+(defsystem "bindery"
+  :description "Foreign language binding utilities."
   :author "Jan Jouleodov"
   :license "MIT"
   :if-feature (:and :win32 :x86-64)
@@ -11,10 +11,10 @@
    (:module "source"
     :components ((:file "package")))))
 
-(defsystem "cfli/asdf"
+(defsystem "bindery/asdf"
   :defsystem-depends-on ("pathway/asdf")
   :if-feature (:and :win32 :x86-64)
-  :depends-on ("cfli" "cffi-toolchain" "cffi-grovel")
+  :depends-on ("bindery" "cffi-toolchain" "cffi-grovel")
   :serial t
   :components
   ((:workspace-extract "external/tcc-0.9.27-win64-bin.zip/tcc/tcc.exe"
