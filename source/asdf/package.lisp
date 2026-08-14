@@ -54,6 +54,49 @@ typedef struct tagPROCESSENTRY32W {
   WCHAR szExeFile[MAX_PATH];
 } PROCESSENTRY32W, *PPROCESSENTRY32W, *LPPROCESSENTRY32W;
 #endif
+
+#ifndef WAVE_FORMAT_PCM
+#define WAVE_FORMAT_PCM 1
+#endif
+
+#ifndef CALLBACK_FUNCTION
+#define CALLBACK_FUNCTION 0x00030000
+#endif
+
+#ifndef WOM_DONE
+#define WOM_DONE 0x3BD
+#endif
+
+#ifndef WAVE_MAPPER
+#define WAVE_MAPPER ((UINT)-1)
+#endif
+
+#ifndef BINDERY_WAVEFORMATEX
+#define BINDERY_WAVEFORMATEX
+typedef struct tWAVEFORMATEX {
+  WORD wFormatTag;
+  WORD nChannels;
+  DWORD nSamplesPerSec;
+  DWORD nAvgBytesPerSec;
+  WORD nBlockAlign;
+  WORD wBitsPerSample;
+  WORD cbSize;
+} WAVEFORMATEX, *PWAVEFORMATEX, *LPWAVEFORMATEX;
+#endif
+
+#ifndef BINDERY_WAVEHDR
+#define BINDERY_WAVEHDR
+typedef struct wavehdr_tag {
+  LPSTR lpData;
+  DWORD dwBufferLength;
+  DWORD dwBytesRecorded;
+  DWORD_PTR dwUser;
+  DWORD dwFlags;
+  DWORD dwLoops;
+  struct wavehdr_tag *lpNext;
+  DWORD_PTR reserved;
+} WAVEHDR, *PWAVEHDR, *LPWAVEHDR;
+#endif
 "
   "Declarations absent from the frozen headers TCC bundles in place of the system
 SDK.  Forced ahead of every translation unit, so it must pick the version target
