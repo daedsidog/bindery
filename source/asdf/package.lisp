@@ -98,6 +98,18 @@ typedef struct wavehdr_tag {
 } WAVEHDR, *PWAVEHDR, *LPWAVEHDR;
 #endif
 
+#ifndef TIMERR_NOERROR
+#define TIMERR_NOERROR 0
+#endif
+
+#ifndef BINDERY_TIMECAPS
+#define BINDERY_TIMECAPS
+typedef struct timecaps_tag {
+  UINT wPeriodMin;
+  UINT wPeriodMax;
+} TIMECAPS, *PTIMECAPS, *LPTIMECAPS;
+#endif
+
 #ifndef ENABLE_VIRTUAL_TERMINAL_PROCESSING
 #define ENABLE_VIRTUAL_TERMINAL_PROCESSING 0x0004
 #endif
