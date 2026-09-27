@@ -113,6 +113,14 @@ typedef struct timecaps_tag {
 #ifndef ENABLE_VIRTUAL_TERMINAL_PROCESSING
 #define ENABLE_VIRTUAL_TERMINAL_PROCESSING 0x0004
 #endif
+
+#ifndef WM_MOUSEHWHEEL
+#define WM_MOUSEHWHEEL 0x020E
+#endif
+
+#ifndef MOUSEEVENTF_HWHEEL
+#define MOUSEEVENTF_HWHEEL 0x01000
+#endif
 "
   "Declarations absent from the frozen headers TCC bundles in place of the system
 SDK.  Forced ahead of every translation unit, so it must pick the version target
